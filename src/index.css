@@ -1055,3 +1055,516 @@ html.dark .glass-nav {
     transition-duration: 0.01ms !important;
   }
 }
+/* ==========================================================================
+   TECUMP AUTH — COMPACT MOBILE GLASSMORPHISM
+   ========================================================================== */
+
+/* Main authentication background */
+.auth-photo-bg {
+  min-height: 100vh;
+
+  background-image:
+    linear-gradient(
+      135deg,
+      rgba(2, 28, 17, 0.90) 0%,
+      rgba(4, 61, 35, 0.82) 45%,
+      rgba(2, 22, 39, 0.90) 100%
+    ),
+    url('/auth-background.jpg');
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   LOGIN GLASS CARD
+   -------------------------------------------------------------------------- */
+
+.auth-login-card {
+  width: 100%;
+  max-width: 480px;
+
+  padding: 24px;
+
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 26px;
+
+  /*
+   * White glass instead of transparent white.
+   * This keeps the text highly readable while still
+   * giving the glassmorphism appearance.
+   */
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.88),
+      rgba(255, 255, 255, 0.72)
+    );
+
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   REGISTER GLASS CARD
+   -------------------------------------------------------------------------- */
+
+.auth-register-card {
+  width: 100%;
+  max-width: 520px;
+
+  padding: 24px;
+
+  border: 1px solid rgba(255, 255, 255, 0.62) !important;
+  border-radius: 26px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.90),
+      rgba(255, 255, 255, 0.74)
+    ) !important;
+
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90);
+
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   REGISTER TEXT
+   -------------------------------------------------------------------------- */
+
+/*
+ * The original RegisterPage used white text because the old card
+ * was transparent. The new glass card is light, so force readable
+ * dark text.
+ */
+
+.auth-register-card h1,
+.auth-register-card h2,
+.auth-register-card h3 {
+  color: #071b12 !important;
+}
+
+.auth-register-card p {
+  color: #334155;
+}
+
+.auth-register-card .text-white {
+  color: #0f172a !important;
+}
+
+.auth-register-card .text-white\/70 {
+  color: #475569 !important;
+}
+
+.auth-register-card .text-white\/65 {
+  color: #64748b !important;
+}
+
+.auth-register-card .text-white\/60 {
+  color: #64748b !important;
+}
+
+.auth-register-card label {
+  color: #1e293b !important;
+
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   STEP INDICATOR
+   -------------------------------------------------------------------------- */
+
+.auth-register-card .bg-white\/15 {
+  background: rgba(15, 23, 42, 0.08) !important;
+}
+
+.auth-register-card .text-white\/60 {
+  color: #64748b !important;
+}
+
+.auth-register-card .bg-gold-500 {
+  box-shadow:
+    0 5px 15px rgba(181, 140, 12, 0.20);
+}
+
+/* --------------------------------------------------------------------------
+   INPUTS
+   -------------------------------------------------------------------------- */
+
+.auth-register-card input,
+.auth-register-card select,
+.auth-register-card textarea,
+.auth-login-card input,
+.auth-login-card select,
+.auth-login-card textarea {
+  min-height: 46px;
+
+  border: 1px solid #cbd5e1 !important;
+
+  border-radius: 13px !important;
+
+  background: rgba(255, 255, 255, 0.92) !important;
+
+  color: #0f172a !important;
+
+  font-size: 14px;
+
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.04);
+
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.auth-register-card input::placeholder,
+.auth-login-card input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.auth-register-card input:hover,
+.auth-register-card select:hover,
+.auth-register-card textarea:hover,
+.auth-login-card input:hover,
+.auth-login-card select:hover {
+  border-color: #94a3b8 !important;
+}
+
+.auth-register-card input:focus,
+.auth-register-card select:focus,
+.auth-register-card textarea:focus,
+.auth-login-card input:focus,
+.auth-login-card select:focus {
+  border-color: #18733a !important;
+
+  outline: none !important;
+
+  box-shadow:
+    0 0 0 3px rgba(24, 115, 58, 0.12),
+    0 5px 15px rgba(15, 23, 42, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   LOGIN TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+
+.auth-login-card h1 {
+  color: #071b12 !important;
+}
+
+.auth-login-card p {
+  color: #475569;
+}
+
+/* --------------------------------------------------------------------------
+   AUTH BUTTONS
+   -------------------------------------------------------------------------- */
+
+.auth-register-card button,
+.auth-login-card button {
+  min-height: 46px;
+
+  border-radius: 13px;
+
+  font-weight: 800;
+}
+
+.auth-register-card button[type='submit'],
+.auth-register-card button:not([type='button']) {
+  background: #075f35;
+
+  color: white;
+}
+
+/* --------------------------------------------------------------------------
+   GLASS INFORMATION / STATUS BOXES
+   -------------------------------------------------------------------------- */
+
+.auth-register-card .bg-white\/10 {
+  background: rgba(255, 255, 255, 0.58) !important;
+
+  border-color: rgba(24, 115, 58, 0.15) !important;
+}
+
+.auth-register-card .border-primary-100 {
+  border-color: rgba(24, 115, 58, 0.20) !important;
+}
+
+/* --------------------------------------------------------------------------
+   TOP NAVIGATION
+   -------------------------------------------------------------------------- */
+
+.auth-photo-bg > div:first-child {
+  max-width: 520px;
+}
+
+.auth-top-link,
+.auth-security-badge {
+  min-height: 38px;
+
+  padding: 7px 12px;
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.38);
+
+  border: 1px solid rgba(255, 255, 255, 0.30);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .auth-photo-bg {
+    min-height: 100svh;
+
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+
+    padding-top: 12px !important;
+    padding-bottom: 18px !important;
+
+    background-attachment: scroll;
+  }
+
+  /* Compact top navigation */
+  .auth-photo-bg > div:first-child {
+    margin-bottom: 10px;
+
+    gap: 8px;
+  }
+
+  .auth-top-link,
+  .auth-security-badge {
+    min-height: 34px;
+
+    padding: 6px 10px;
+
+    font-size: 10px;
+  }
+
+  .auth-top-link svg,
+  .auth-security-badge svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Smaller login card */
+  .auth-login-card {
+    max-width: 100%;
+
+    padding: 18px 15px !important;
+
+    border-radius: 22px;
+  }
+
+  /* Smaller register card */
+  .auth-register-card {
+    max-width: 100%;
+
+    padding: 17px 14px !important;
+
+    border-radius: 22px !important;
+  }
+
+  /* Smaller headings */
+  .auth-login-card h1 {
+    margin-top: 6px;
+
+    font-size: 25px !important;
+
+    line-height: 1.15;
+  }
+
+  .auth-register-card h2 {
+    font-size: 18px !important;
+
+    line-height: 1.2;
+  }
+
+  .auth-kicker {
+    margin-top: 10px;
+
+    font-size: 9px;
+  }
+
+  .auth-login-card .auth-lock-icon {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 14px;
+  }
+
+  .auth-login-card .auth-lock-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Reduce vertical spacing inside forms */
+  .auth-register-card .gap-4 {
+    gap: 10px !important;
+  }
+
+  .auth-login-card .gap-4 {
+    gap: 10px !important;
+  }
+
+  /* Smaller inputs */
+  .auth-register-card input,
+  .auth-register-card select,
+  .auth-register-card textarea,
+  .auth-login-card input,
+  .auth-login-card select,
+  .auth-login-card textarea {
+    min-height: 44px;
+
+    padding: 9px 11px !important;
+
+    font-size: 13px;
+  }
+
+  /* Smaller labels */
+  .auth-register-card label,
+  .auth-login-card label {
+    margin-bottom: 4px;
+
+    font-size: 10px !important;
+  }
+
+  /* Smaller status messages */
+  .auth-message {
+    padding: 10px 11px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+  }
+
+  /* Login button */
+  .auth-sign-in-button {
+    min-height: 46px !important;
+
+    font-size: 14px !important;
+  }
+
+  /* Registration buttons */
+  .auth-register-card button {
+    min-height: 43px;
+
+    padding-left: 13px;
+    padding-right: 13px;
+
+    font-size: 12px;
+  }
+
+  /* Reduce registration step spacing */
+  .auth-register-card .mb-6 {
+    margin-bottom: 14px !important;
+  }
+
+  .auth-register-card .mb-4 {
+    margin-bottom: 10px !important;
+  }
+
+  .auth-register-card .mt-8 {
+    margin-top: 16px !important;
+  }
+
+  .auth-register-card .mt-6 {
+    margin-top: 14px !important;
+  }
+
+  /* Smaller step circles */
+  .auth-register-card .h-7 {
+    height: 24px !important;
+  }
+
+  .auth-register-card .w-7 {
+    width: 24px !important;
+  }
+
+  /* Make the declaration text comfortable */
+  .auth-register-card .text-xs {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /* Prevent long review fields from overflowing */
+  .auth-register-card .flex.justify-between {
+    gap: 12px;
+  }
+
+  .auth-register-card .flex.justify-between > span:last-child {
+    text-align: right;
+
+    overflow-wrap: anywhere;
+  }
+
+  /* Footer */
+  .auth-login-card + div,
+  .auth-register-card + p {
+    margin-top: 12px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .auth-login-card {
+    padding: 15px 12px !important;
+  }
+
+  .auth-register-card {
+    padding: 14px 11px !important;
+  }
+
+  .auth-login-card h1 {
+    font-size: 23px !important;
+  }
+
+  .auth-register-card h2 {
+    font-size: 17px !important;
+  }
+
+  .auth-top-link span,
+  .auth-security-badge span {
+    font-size: 9px;
+  }
+
+  .auth-register-card input,
+  .auth-register-card select,
+  .auth-register-card textarea,
+  .auth-login-card input,
+  .auth-login-card select,
+  .auth-login-card textarea {
+    min-height: 42px;
+
+    font-size: 12px;
+  }
+}

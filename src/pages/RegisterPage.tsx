@@ -168,7 +168,7 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="auth-photo-bg flex min-h-screen flex-col items-center justify-center px-4 py-12 sm:px-6">
+    <div className="auth-photo-bg auth-register-page flex min-h-screen flex-col items-center justify-center px-3 py-5 sm:px-6 sm:py-8">
       <div className="mb-4 flex w-full max-w-xl items-center justify-between">
         <Link
           to="/"
@@ -184,7 +184,10 @@ export function RegisterPage() {
         </div>
       </div>
 
-      <Card variant="glass" className="w-full max-w-xl border border-white/30 bg-white/16 p-6 shadow-2xl shadow-black/25 backdrop-blur-2xl sm:p-9">
+      <Card
+  variant="glass"
+  className="auth-register-card w-full max-w-xl"
+>
         {isFromVisitorCheckIn && (
           <div className="mb-6 flex items-start gap-3 rounded-2xl border border-primary-100 bg-white/10 p-4 text-xs leading-5 text-white shadow-sm">
             <HeartHandshake className="shrink-0 text-gold-300" size={20} />
