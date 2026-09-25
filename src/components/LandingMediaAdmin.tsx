@@ -651,7 +651,7 @@ export function LandingMediaAdmin() {
                                       file,
                                       (url) => {
                                         const next = [...backdropSlides];
-                                        next[idx] = { ...slide, src: url };
+                                        next[idx] = { ...slide, src: url, active: true };
                                         setBackdropSlides(next);
                                         setBgSrc(url);
                                         setUploadingIndex(null);
