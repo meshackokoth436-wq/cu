@@ -230,14 +230,14 @@ export function HomePage() {
           <div className="home-hero__grid">
             <div className="home-hero__copy">
               <p className="home-hero__campus">
-                TECHNICAL UNIVERSITY OF MOMBASA
+                A CHRISTIAN STUDENT CHRISTIAN COMMUNITY
               </p>
 
               <h1>
-                A Christian
+                The Technical University
                 <br />
-                community{' '}
-                <span>alive with purpose.</span>
+                of Mombasa{' '}
+                <span>Christian Union.</span>
               </h1>
 
               <p className="home-hero__description">
