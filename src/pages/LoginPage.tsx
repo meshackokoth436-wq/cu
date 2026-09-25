@@ -1,72 +1,364 @@
 import { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { ArrowLeft, Home, LockKeyhole, ShieldCheck, AlertCircle } from 'lucide-react';
-import { Card } from '@/components/Card';
+import {
+  ArrowLeft,
+  Home,
+  LockKeyhole,
+  ShieldCheck,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  CheckCircle2,
+  UserRound,
+} from 'lucide-react';
+
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
-import { fetchCurrentSession, login } from '@/features/auth/auth.api';
+import {
+  fetchCurrentSession,
+  login,
+} from '@/features/auth/auth.api';
 import { useAuthStore } from '@/store/auth.store';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const setSession = useAuthStore((s) => s.setSession);
   const setPermissions = useAuthStore((s) => s.setPermissions);
   const setRoles = useAuthStore((s) => s.setRoles);
-  const sessionExpired = new URLSearchParams(location.search).get('session') === 'expired';
-  const justRegistered = Boolean((location.state as { justRegistered?: boolean } | null)?.justRegistered);
+
+  const sessionExpired =
+    new URLSearchParams(location.search).get('session') === 'expired';
+
+  const justRegistered = Boolean(
+    (location.state as { justRegistered?: boolean } | null)
+      ?.justRegistered
+  );
+
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const mutation = useMutation({
     mutationFn: login,
+
     onSuccess: async (result) => {
       setSession(result.accessToken, result.user as never);
+
       try {
         const session = await fetchCurrentSession();
-        setPermissions(Array.isArray(session.permissions) ? session.permissions as string[] : []);
-        setRoles(Array.isArray(session.roles) ? session.roles as never : []);
+
+        setPermissions(
+          Array.isArray(session.permissions)
+            ? (session.permissions as string[])
+            : []
+        );
+
+        setRoles(
+          Array.isArray(session.roles)
+            ? (session.roles as never)
+            : []
+        );
       } catch {
-        // The backend session is still valid; the dashboard can rehydrate /me later.
+        // The backend session is still valid.
+        // The dashboard can rehydrate the session later.
       }
+
       navigate('/dashboard', { replace: true });
     },
+
     onError: (err: unknown) => {
-      setError((err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Invalid credentials. Please verify your details and try again.');
+      const message =
+        (
+          err as {
+            response?: {
+              data?: {
+                message?: string;
+              };
+            };
+          }
+        )?.response?.data?.message ||
+        'We could not sign you in. Please check your details and try again.';
+
+      setError(message);
     },
   });
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setError(null);
+
+    mutation.mutate({
+      identifier: identifier.trim(),
+      password,
+    });
+  };
+
   return (
-    <div className="auth-photo-bg flex min-h-[calc(100vh-80px)] items-center justify-center px-5 py-12">
-      <div className="w-full max-w-md">
-        <div className="mb-4 flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/12 px-3.5 py-2 text-xs font-bold text-white shadow-lg backdrop-blur-xl"><ArrowLeft size={14} /><Home size={14} /> Back to Home</Link>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/12 px-3 py-2 text-[10px] font-bold text-white shadow-lg backdrop-blur-xl"><ShieldCheck size={13} /> Secure TUMCU account</span>
+    <main className="auth-photo-bg min-h-[calc(100vh-80px)] px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+      <div className="mx-auto w-full max-w-6xl">
+
+        {/* Top navigation */}
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Link
+            to="/"
+            className="auth-top-link"
+          >
+            <ArrowLeft size={17} />
+            <Home size={17} />
+            <span>Back to Home</span>
+          </Link>
+
+          <div className="auth-security-badge">
+            <ShieldCheck size={17} />
+            <span>Secure TUMCU account</span>
+          </div>
         </div>
 
-        <Card variant="glass" className="border border-white/30 bg-white/16 p-7 shadow-2xl shadow-black/25 backdrop-blur-2xl sm:p-9">
-          <div className="flex items-start justify-between"><div><h1 className="text-2xl font-black text-white">Welcome back</h1><p className="mt-1 text-xs text-white/75">Sign in with your TUMCU account.</p></div><div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-white"><LockKeyhole size={18} /></div></div>
+        {/* Login area */}
+        <div className="flex justify-center">
+          <section
+            className="auth-login-card w-full max-w-[520px]"
+            aria-labelledby="login-title"
+          >
+            {/* Header */}
+            <div className="text-center">
+              <div className="auth-lock-icon mx-auto">
+                <LockKeyhole size={25} strokeWidth={2.2} />
+              </div>
 
-          {sessionExpired && <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-medium text-amber-800">Your session ended. Please sign in again.</div>}
-          {justRegistered && <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs font-medium text-emerald-800">Registration received. Your membership application is awaiting administrator approval.</div>}
+              <p className="auth-kicker">
+                TUMCU MEMBER PORTAL
+              </p>
 
-          <form className="mt-7 flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); setError(null); mutation.mutate({ identifier: identifier.trim(), password }); }}>
-            <Input label="Email, admission number, or phone" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="Enter your registered identifier" required autoComplete="username" />
-            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" required autoComplete="current-password" />
-            {error && <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-xs font-medium text-red-700"><AlertCircle size={15} className="mt-0.5 shrink-0" /><span>{error}</span></div>}
-            <Button type="submit" loading={mutation.isPending} className="mt-1">Sign In</Button>
-          </form>
+              <h1
+                id="login-title"
+                className="mt-2 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl"
+              >
+                Welcome back
+              </h1>
 
-          <div className="mt-6 rounded-xl border border-white/20 bg-black/15 p-4 text-xs text-white/70 shadow-inner backdrop-blur-md">
-            <p className="font-bold text-white">Account approval</p>
-            <p className="mt-1 leading-5 text-white/70">New registrations remain pending until an authorised administrator approves the membership application. Your account status is controlled by the TECUMP backend.</p>
-          </div>
+              <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-slate-600 sm:text-base">
+                Sign in to access your TUMCU account, dashboard and
+                member services.
+              </p>
+            </div>
 
-          <p className="mt-6 text-center text-xs text-white/70">Not registered yet? <Link to="/register" className="font-bold text-gold-300 hover:text-gold-200 hover:underline">Register for Membership</Link></p>
-        </Card>
+            {/* Status messages */}
+            {sessionExpired && (
+              <div className="auth-message auth-message-warning mt-6">
+                <AlertCircle
+                  size={19}
+                  className="mt-0.5 shrink-0"
+                />
+
+                <div>
+                  <p className="font-bold">
+                    Your session has ended
+                  </p>
+
+                  <p className="mt-0.5">
+                    Please sign in again to continue.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {justRegistered && (
+              <div className="auth-message auth-message-success mt-6">
+                <CheckCircle2
+                  size={19}
+                  className="mt-0.5 shrink-0"
+                />
+
+                <div>
+                  <p className="font-bold">
+                    Registration received
+                  </p>
+
+                  <p className="mt-0.5">
+                    Your membership application is waiting for
+                    administrator approval.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Form */}
+            <form
+              className="mt-7 space-y-5"
+              onSubmit={handleSubmit}
+              noValidate={false}
+            >
+              {/* Identifier */}
+              <div>
+                <Input
+                  label="Email, admission number, or phone"
+                  value={identifier}
+                  onChange={(e) => {
+                    setIdentifier(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  placeholder="e.g. yourname@email.com"
+                  required
+                  autoComplete="username"
+                  className="auth-input"
+                />
+
+                <p className="auth-input-help">
+                  Use the email, admission number, or phone number
+                  registered on your TUMCU account.
+                </p>
+              </div>
+
+              {/* Password */}
+              <div>
+                <div className="relative">
+                  <Input
+                    label="Password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (error) setError(null);
+                    }}
+                    placeholder="Enter your password"
+                    required
+                    autoComplete="current-password"
+                    className="auth-input pr-12"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowPassword((current) => !current)
+                    }
+                    className="auth-password-toggle"
+                    aria-label={
+                      showPassword
+                        ? 'Hide password'
+                        : 'Show password'
+                    }
+                    title={
+                      showPassword
+                        ? 'Hide password'
+                        : 'Show password'
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff size={19} />
+                    ) : (
+                      <Eye size={19} />
+                    )}
+                  </button>
+                </div>
+
+                <p className="auth-input-help">
+                  Keep your password private. Do not share it with
+                  anyone.
+                </p>
+              </div>
+
+              {/* Error */}
+              {error && (
+                <div
+                  className="auth-message auth-message-error"
+                  role="alert"
+                  aria-live="polite"
+                >
+                  <AlertCircle
+                    size={19}
+                    className="mt-0.5 shrink-0"
+                  />
+
+                  <div>
+                    <p className="font-bold">
+                      Sign-in unsuccessful
+                    </p>
+
+                    <p className="mt-0.5">
+                      {error}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                loading={mutation.isPending}
+                disabled={!identifier.trim() || !password}
+                className="auth-sign-in-button w-full"
+                size="lg"
+              >
+                {mutation.isPending
+                  ? 'Signing in...'
+                  : 'Sign In'}
+              </Button>
+            </form>
+
+            {/* Account information */}
+            <div className="auth-info-card mt-7">
+              <div className="flex items-start gap-3">
+                <div className="auth-info-icon">
+                  <UserRound size={18} />
+                </div>
+
+                <div>
+                  <h2 className="text-sm font-black text-slate-950">
+                    New to TUMCU?
+                  </h2>
+
+                  <p className="mt-1 text-xs leading-5 text-slate-600">
+                    Register for membership first. New
+                    registrations remain pending until an
+                    authorised administrator approves the
+                    application.
+                  </p>
+
+                  <Link
+                    to="/register"
+                    className="mt-3 inline-flex items-center font-bold text-sm text-emerald-800 hover:text-emerald-950 hover:underline"
+                  >
+                    Register for Membership
+                    <ArrowLeft
+                      size={15}
+                      className="ml-1 rotate-180"
+                    />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Security footer */}
+            <div className="mt-6 flex items-center justify-center gap-2 text-center text-[11px] font-medium text-slate-500">
+              <ShieldCheck
+                size={14}
+                className="text-emerald-700"
+              />
+
+              <span>
+                Your account is protected by the TECUMP
+                authentication system.
+              </span>
+            </div>
+          </section>
+        </div>
+
+        {/* Bottom navigation */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/"
+            className="text-xs font-semibold text-white/90 hover:text-white hover:underline drop-shadow-md"
+          >
+            ← Return to the TUMCU home page
+          </Link>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
