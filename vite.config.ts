@@ -72,6 +72,7 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts: ['cu-production-0bb6.up.railway.app'],
     port: 3000,
     host: '0.0.0.0',
     hmr: false,
