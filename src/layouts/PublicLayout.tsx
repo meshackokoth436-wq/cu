@@ -22,6 +22,7 @@ export function PublicLayout() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const isHome = location.pathname === '/';
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
   useEffect(() => {
@@ -38,7 +39,7 @@ export function PublicLayout() {
         </div>
       </div>
 
-      <header className="sticky top-3 z-50 mx-3 sm:mx-5 lg:mx-8">
+      {!isHome && <header className="sticky top-3 z-50 mx-3 sm:mx-5 lg:mx-8">
         <nav className="glass-nav mx-auto flex max-w-7xl items-center justify-between rounded-[22px] border px-4 py-3 sm:px-5">
           <Link to="/" className="flex items-center gap-3">
             <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-full bg-white/80 ring-1 ring-primary-100 dark:bg-slate-800 dark:ring-slate-700">
@@ -112,10 +113,10 @@ export function PublicLayout() {
             )}
           </div>
         </div>
-      </header>
+      </header>}
 
       <main>
-        {location.pathname !== '/' && (
+        {!isHome && location.pathname !== '/' && (
           <div className="page-shell pt-4 pb-1">
             <Link
               to="/"
@@ -130,7 +131,7 @@ export function PublicLayout() {
         <Outlet />
       </main>
 
-      <footer className="relative overflow-hidden bg-primary-900 text-white">
+      {!isHome && <footer className="relative overflow-hidden bg-primary-900 text-white">
         <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-gold-500/10 blur-3xl" />
         <div className="page-shell section-pad relative grid gap-10 md:grid-cols-[1.3fr_.7fr_.7fr]">
           <div>
@@ -141,7 +142,7 @@ export function PublicLayout() {
           <div><h3 className="font-bold">Connect</h3><div className="mt-4 space-y-3 text-sm text-white/65"><Link className="block hover:text-gold-400" to="/register">Become a Member</Link><Link className="block hover:text-gold-400" to="/elections">Leadership & Nominations</Link><Link className="block hover:text-gold-400" to="/events">See Upcoming Events</Link><Link className="block hover:text-gold-400" to="/contact">Contact the Union</Link><a href="mailto:tumcunion@gmail.com" className="block text-gold-400 hover:text-gold-300 font-medium transition">tumcunion@gmail.com</a></div></div>
         </div>
         <div className="border-t border-white/10"><div className="page-shell py-5 text-xs text-white/45">© {new Date().getFullYear()} Technical University of Mombasa Christian Union. All rights reserved.</div></div>
-      </footer>
+      </footer>}
     </div>
   );
 }
