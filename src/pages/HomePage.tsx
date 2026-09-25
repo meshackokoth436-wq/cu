@@ -125,9 +125,9 @@ function Hero({ slides }: { slides: Array<{ id: string; src: string; caption: st
         </div>
 
         <div className="max-w-4xl pb-10 lg:pb-20">
-          <p className="text-sm font-bold uppercase tracking-[.28em] text-emerald-300">Alive with purpose</p>
+          <p className="text-sm font-bold uppercase tracking-[.28em] text-emerald-300">Technical University of Mombasa</p>
           <h1 className="mt-4 max-w-4xl text-5xl font-black leading-[.98] tracking-[-.045em] text-white sm:text-6xl lg:text-8xl">
-            The Technical University of Mombasa <span className="text-emerald-300">Christian union.</span>
+            A Christian community <span className="text-emerald-300">alive with purpose.</span>
           </h1>
           <p className="mt-7 max-w-2xl text-base leading-8 text-white/80 sm:text-lg lg:text-xl">
             A Christ-centred student community where faith becomes friendship, the Word becomes formation, and service becomes a way of life.
@@ -186,7 +186,7 @@ export function HomePage() {
 
   return (
     <div className="bg-[#f5f8f6] text-slate-950">
-      <section className="page-shell pt-4 sm:pt-6">
+      <section className="home-hero-full">
         <Hero slides={heroSlides} />
       </section>
 
