@@ -17,9 +17,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { HeroCarousel } from '@/components/HeroCarousel';
-import { PrayerArt } from '@/components/hero-art/PrayerArt';
-import { BibleStudyArt } from '@/components/hero-art/BibleStudyArt';
-import { CommunityArt } from '@/components/hero-art/CommunityArt';
 import { fetchLandingMedia } from '@/features/landing-media/landing-media.api';
 import {
   fetchPublicAnnouncements,
@@ -45,19 +42,19 @@ const moments = [
   {
     title: 'Prayer that moves us',
     text: 'We gather to seek God, carry one another and intercede for our campus and nation.',
-    Art: PrayerArt,
+    image: '/landing/prayer.jpg',
     tag: 'PRAYER',
   },
   {
     title: 'The Word that forms us',
     text: 'Bible study, discipleship, and grounded hermeneutics taking faith beyond Sunday into life.',
-    Art: BibleStudyArt,
+    image: '/landing/word.jpg',
     tag: 'THE WORD',
   },
   {
     title: 'Community that sends us',
     text: 'We serve, evangelize, and build lifelong friendships that reflect the love of Christ.',
-    Art: CommunityArt,
+    image: '/landing/community.jpg',
     tag: 'MISSION',
   },
 ];
@@ -538,7 +535,11 @@ export function HomePage() {
               className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="relative aspect-[16/10] overflow-hidden bg-primary-950">
-                <item.Art />
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-full w-full object-cover"
+                />
 
                 <div className="absolute right-4 top-4 rounded-full bg-black/40 px-3 py-1 text-[10px] font-black uppercase tracking-[.2em] text-gold-300 backdrop-blur-md">
                   {item.tag}
