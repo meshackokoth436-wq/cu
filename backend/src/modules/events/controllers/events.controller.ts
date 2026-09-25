@@ -4,6 +4,8 @@ import { Event } from '../interfaces/events.interface';
 import { EventsService } from '../services/events.service';
 import { sendSuccess } from '../../../utils/response';
 import { asyncHandler } from '../../../utils/asyncHandler';
+import { ValidationError } from '../../../utils/errors';
+import { landingMediaService } from '../../landing-media/landing-media.service';
 
 const service = new EventsService();
 
@@ -22,6 +24,20 @@ class EventsController extends BaseController<Event> {
       total: result.total,
       totalPages: result.totalPages,
     });
+  });
+
+  uploadImage = asyncHandler(async (req: Request, res: Response) => {
+    const { image, base64, filename } = req.body || {};
+    const rawData = image || base64;
+    if (!rawData || typeof rawData !== 'string') {
+      throw new ValidationError('Image data is required (dataUrl or base64 string)');
+    }
+    try {
+      const result = landingMediaService.uploadImage(rawData, filename || 'event-photo.jpg');
+      return sendSuccess(res, result, 'Event image uploaded successfully', 201);
+    } catch (error) {
+      throw new ValidationError(error instanceof Error ? error.message : 'Invalid image upload');
+    }
   });
 
   approve = asyncHandler(async (req: Request, res: Response) => {

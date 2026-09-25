@@ -13,6 +13,7 @@ export interface Event {
   start_at: string;
   end_at: string | null;
   location: string | null;
+  image_url: string | null;
   organized_by: string;
   status: EventStatus;
   capacity: number | null;

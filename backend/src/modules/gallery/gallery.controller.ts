@@ -4,6 +4,12 @@ import { sendSuccess } from '../../utils/response';
 import { asyncHandler } from '../../utils/asyncHandler';
 
 export const galleryController = {
+  listPublicAlbums: asyncHandler(async (req: Request, res: Response) => {
+    const { category } = req.query;
+    const albums = await galleryService.getAlbums(category as string, false);
+    return sendSuccess(res, albums, 'Public gallery albums retrieved');
+  }),
+
   // Member: Get Albums (only published unless admin/leader)
   listAlbums: asyncHandler(async (req: Request, res: Response) => {
     const { category, include_unpublished } = req.query;

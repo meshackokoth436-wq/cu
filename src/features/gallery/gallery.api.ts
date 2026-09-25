@@ -15,10 +15,12 @@ export interface GalleryAlbum {
   created_at: string;
 }
 
-export async function fetchGalleryAlbums(params?: {
-  category?: string;
-  include_unpublished?: boolean;
-}): Promise<GalleryAlbum[]> {
+export async function fetchPublicGalleryAlbums(params?: { category?: string }): Promise<GalleryAlbum[]> {
+  const { data } = await api.get<ApiResponse<GalleryAlbum[]>>('/gallery/public/albums', { params });
+  return data.data;
+}
+
+export async function fetchGalleryAlbums(params?: { category?: string; include_unpublished?: boolean }): Promise<GalleryAlbum[]> {
   const { data } = await api.get<ApiResponse<GalleryAlbum[]>>('/gallery/albums', { params });
   return data.data;
 }

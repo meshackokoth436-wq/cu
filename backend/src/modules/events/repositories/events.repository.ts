@@ -34,12 +34,13 @@ export class EventsRepository extends BaseRepository<Event> {
          FROM information_schema.columns
         WHERE table_schema = DATABASE()
           AND table_name = 'events'
-          AND column_name IN ('status', 'capacity', 'registration_deadline')`
+          AND column_name IN ('status', 'capacity', 'registration_deadline', 'image_url')`
     );
     const columns = new Set(columnRows.map((row) => row.column_name));
     const hasStatus = columns.has('status');
     const hasCapacity = columns.has('capacity');
     const hasRegistrationDeadline = columns.has('registration_deadline');
+    const hasImageUrl = columns.has('image_url');
 
     const statusWhere = hasStatus
       ? `status IN ('approved', 'registration_open', 'ongoing')
@@ -66,6 +67,7 @@ export class EventsRepository extends BaseRepository<Event> {
           ${hasStatus ? 'status' : "'approved' AS status"},
           ${hasCapacity ? 'capacity' : 'NULL AS capacity'},
           ${hasRegistrationDeadline ? 'registration_deadline' : 'NULL AS registration_deadline'},
+          ${hasImageUrl ? 'image_url' : 'NULL AS image_url'},
           created_at
        FROM events
        WHERE ${statusWhere}

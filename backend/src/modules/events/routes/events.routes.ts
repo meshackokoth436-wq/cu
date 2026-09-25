@@ -10,6 +10,8 @@ router.get('/public', eventsController.listPublic);
 
 router.use(authenticate, loadPermissions);
 
+router.post('/upload', requirePermission('events.create'), eventsController.uploadImage);
+
 router.get('/', requirePermission('events.view'), eventsController.list);
 router.get('/:id', requirePermission('events.view'), eventsController.getById);
 router.post('/', requirePermission('events.create'), eventsController.create);

@@ -14,6 +14,8 @@ import {
   Users,
   X,
   AlertCircle,
+  Upload,
+  Image as ImageIcon,
 } from 'lucide-react';
 import {
   fetchAllEvents,
@@ -27,6 +29,8 @@ import {
   type PublicEvent,
   type WeeklyProgramme,
   EVENT_TYPE_LABELS,
+  uploadEventImage,
+  resolveMediaUrl,
 } from '@/features/events/events.api';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
@@ -48,6 +52,7 @@ export function EventsProgrammesAdmin() {
   // Notification / Feedback banner
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [uploadingEventImage, setUploadingEventImage] = useState(false);
 
   const showFeedback = (msg: string, isError = false) => {
     if (isError) {
@@ -56,6 +61,35 @@ export function EventsProgrammesAdmin() {
     } else {
       setActionSuccess(msg);
       setTimeout(() => setActionSuccess(null), 4000);
+    }
+  };
+
+  const handleEventImageUpload = async (file?: File) => {
+    if (!file || !editingEvent) return;
+    if (!file.type.startsWith('image/')) {
+      showFeedback('Please choose a JPG, PNG or WEBP image.', true);
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      showFeedback('Image is too large. Maximum size is 8 MB.', true);
+      return;
+    }
+
+    setUploadingEventImage(true);
+    try {
+      const reader = new FileReader();
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      const uploaded = await uploadEventImage(dataUrl, file.name);
+      setEditingEvent((current) => current ? { ...current, image_url: uploaded.url } : current);
+      showFeedback('Event image uploaded. Save the event to publish it.');
+    } catch (err: any) {
+      showFeedback(err?.response?.data?.message || err?.message || 'Event image upload failed.', true);
+    } finally {
+      setUploadingEventImage(false);
     }
   };
 
@@ -217,6 +251,7 @@ export function EventsProgrammesAdmin() {
                   event_type: 'fellowship',
                   status: 'approved',
                   description: '',
+                  image_url: null,
                 });
                 setIsEventModalOpen(true);
               }}
@@ -267,6 +302,13 @@ export function EventsProgrammesAdmin() {
                   className="rounded-2xl border border-slate-200/90 bg-white p-5 shadow-2xs hover:shadow-xs transition flex flex-col justify-between"
                 >
                   <div>
+                    <div className="mb-4 aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100">
+                      {evt.image_url ? (
+                        <img src={resolveMediaUrl(evt.image_url)} alt={evt.title} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="grid h-full place-items-center text-slate-300"><ImageIcon size={30} /></div>
+                      )}
+                    </div>
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 border border-emerald-200">
                         {EVENT_TYPE_LABELS[evt.event_type] || evt.event_type || 'Event'}
@@ -474,6 +516,27 @@ export function EventsProgrammesAdmin() {
                   placeholder="e.g. Annual Campus Worship Night"
                   className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs text-slate-900 focus:border-[#006633] focus:outline-none"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Event Cover Photo</label>
+                <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+                  <div className="aspect-[16/7] bg-slate-100">
+                    {editingEvent.image_url ? (
+                      <img src={resolveMediaUrl(editingEvent.image_url)} alt="Event preview" className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="grid h-full place-items-center text-slate-300"><ImageIcon size={34} /></div>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between gap-3 p-3">
+                    <div className="min-w-0"><p className="text-xs font-bold text-slate-700">Upload a real event image</p><p className="mt-0.5 text-[11px] text-slate-500">JPG, PNG or WEBP • maximum 8 MB</p></div>
+                    <label className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-emerald-700 px-3 py-2 text-xs font-black text-white hover:bg-emerald-800">
+                      <Upload size={14} />
+                      {uploadingEventImage ? 'Uploading…' : 'Choose photo'}
+                      <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" disabled={uploadingEventImage} onChange={(e) => { const file = e.target.files?.[0]; void handleEventImageUpload(file); e.currentTarget.value = ''; }} />
+                    </label>
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

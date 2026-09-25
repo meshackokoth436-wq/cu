@@ -4,6 +4,9 @@ import { authenticate, loadPermissions } from '../../middleware/auth.middleware'
 
 const router = Router();
 
+// Public landing-page gallery feed. Only published albums are returned.
+router.get('/public/albums', galleryController.listPublicAlbums);
+
 // Strictly authenticated members only (Section 13)
 router.use(authenticate, loadPermissions);
 

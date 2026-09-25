@@ -10,6 +10,7 @@ export interface PublicEvent {
   location: string | null;
   status: string;
   capacity: number | null;
+  image_url?: string | null;
   day_of_week?: string;
   date?: string;
   start_time?: string;
@@ -29,7 +30,21 @@ export interface WeeklyProgramme {
   description?: string;
 }
 
-/** Public endpoint — only approved/open/ongoing/completed events, never drafts. */
+export function resolveMediaUrl(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  if (/^(https?:|data:|blob:)/i.test(value)) return value;
+  const apiUrl = String(import.meta.env.VITE_API_URL ?? '/api/v1');
+  if (apiUrl.startsWith('http://') || apiUrl.startsWith('https://')) {
+    try {
+      const origin = new URL(apiUrl).origin;
+      return `${origin}${value.startsWith('/') ? value : `/${value}`}`;
+    } catch {
+      return value;
+    }
+  }
+  return value;
+}
+
 export async function fetchPublicEvents(): Promise<PublicEvent[]> {
   try {
     const { data } = await api.get<any>('/events/public');
@@ -42,7 +57,6 @@ export async function fetchPublicEvents(): Promise<PublicEvent[]> {
   }
 }
 
-/** Admin / Authenticated: fetch all events */
 export async function fetchAllEvents(): Promise<PublicEvent[]> {
   try {
     const { data } = await api.get<any>('/events');
@@ -70,7 +84,11 @@ export async function deleteEvent(id: string): Promise<void> {
   await api.delete(`/events/${id}`);
 }
 
-/** Weekly programmes endpoints */
+export async function uploadEventImage(image: string, filename: string): Promise<{ url: string; filename: string }> {
+  const { data } = await api.post<ApiResponse<{ url: string; filename: string }>>('/events/upload', { image, filename });
+  return data.data;
+}
+
 export async function fetchProgrammes(): Promise<WeeklyProgramme[]> {
   try {
     const { data } = await api.get<any>('/programmes');
@@ -118,30 +136,13 @@ export function downloadSemesterCalendarIcs(): void {
 
 export function formatEventDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-KE', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
   });
 }
 
 export const EVENT_TYPE_LABELS: Record<string, string> = {
-  worship_night: 'Worship Night',
-  missions: 'Missions',
-  evangelism: 'Evangelism',
-  high_school_mission: 'High School Mission',
-  retreat: 'Retreat',
-  conference: 'Conference',
-  leadership_summit: 'Leadership Summit',
-  bible_study: 'Bible Study',
-  prayer_retreat: 'Prayer Retreat',
-  sunday_service: 'Sunday Service',
-  fellowship: 'Fellowship',
-  training: 'Training',
-  agm: 'AGM',
-  sgm: 'SGM',
-  camp: 'Camp',
-  graduation_thanksgiving: 'Graduation Thanksgiving',
-  other: 'Event',
+  worship_night: 'Worship Night', missions: 'Missions', evangelism: 'Evangelism', high_school_mission: 'High School Mission',
+  retreat: 'Retreat', conference: 'Conference', leadership_summit: 'Leadership Summit', bible_study: 'Bible Study',
+  prayer_retreat: 'Prayer Retreat', sunday_service: 'Sunday Service', fellowship: 'Fellowship', training: 'Training',
+  agm: 'AGM', sgm: 'SGM', camp: 'Camp', graduation_thanksgiving: 'Graduation Thanksgiving', other: 'Event',
 };
-
